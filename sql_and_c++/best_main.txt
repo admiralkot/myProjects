@@ -1,0 +1,116 @@
+#include "stdio.h"
+#include <iostream>
+#include <cstring>
+#include <cstdio>
+#include </usr/include/mysql/mysql.h>
+ 
+ 
+MYSQL mysql;
+MYSQL_RES *res;
+MYSQL_ROW row;
+
+
+ 
+void die (void){
+   printf("%s\n", mysql_error(&mysql));
+   exit(0);
+}
+
+void print()
+{
+   while((row = mysql_fetch_row(res))) {
+        for (int i = 0 ; i < mysql_num_fields(res); i++)
+           printf("%s\t",row[i]);
+        printf ("\n");
+     }
+}
+
+void select()
+{
+   char str[200];
+   std::cout<<"Введите запрос в БД: \n";
+   std::cin.getline(str,200);
+   //char query[] = "" ;
+   //strcat(query,str);
+   if (mysql_query(&mysql,str))
+       die();
+   if (!(res = mysql_store_result(&mysql))) 
+       die();
+   print();
+   mysql_free_result(res);
+   if (!mysql_eof(res)) 
+       die (); 
+}
+
+// void add_column() // Добавить колонку в таблицу
+// {
+//    char db_name[20], column_name[20], type_name[20];
+//    char query[200] = "ALTER TABLE " ;
+//    std::cout<<"Введите название таблицы: \n";
+//    std::cin.getline(db_name,20);
+//    std::cout<<"Введите название колонки: \n";
+//    std::cin.getline(column_name,20);
+//    std::cout<<"Введите тип хранения: \n";
+//    std::cin.getline(type_name,20);
+ 
+//    strcat(query,db_name);
+//    strcat(query," ADD COLUMN ");
+//    strcat(query,column_name);
+//    strcat(query," ");
+//    strcat(query,type_name);
+//    std::cout<<query;
+//    if (mysql_query(&mysql,query))
+//        die();
+//    if (!(res = mysql_store_result(&mysql))) 
+//        die();
+//    print();
+//    mysql_free_result(res);
+//    if (!mysql_eof(res)) 
+//        die (); 
+// }
+
+void Menu()//передаем кол-во продуктов и массив продуктов в ф-цию
+{
+	int numberSearch;
+	do
+	{
+	std::cout<<"Здравствуйте, пожалуйста выбирайте поле в Меню"<<std::endl;
+	std::cout<<"1- Добавление товара"<<std::endl;
+	std::cout<<"2- Печать товара"<<std::endl;
+	std::cout<<"3- Поиск товара по имени"<<std::endl;
+	std::cout<<"4- Поиск товара по складу"<<std::endl;
+	std::cout<<"5- Норматив запаса"<<std::endl;
+	std::cout<<"6- Записать информацию про товар в файл"<<std::endl;
+	std::cout<<"7- Чтение информации про товар из файла"<<std::endl;
+	std::cout<<"8- Выход из программы"<<std::endl;
+	std::cin>>numberSearch;
+	switch(numberSearch)
+	{
+		case 1: ;break;
+		case 2: ;break;
+		case 3: ;break;
+		case 4: ;break;
+		case 5: ;break;
+		case 6: ;break;
+		case 7: ;break;
+		case 8: exit(0); break;
+
+	}
+	} while(numberSearch!=8);
+}
+
+int main (void)
+{
+    unsigned int menu = 0;
+    //char *str = 0;
+    bool exit=false;
+    if (!mysql_init (&mysql)) abort ();
+    if (!(mysql_real_connect(&mysql,"localhost","user_for_lab","t_Est444", "dblab", 3306 , NULL , 0))) // user_for_lab - имя юзера в БД, дальше пароль и название используемой БД.
+       die();
+    if (mysql_select_db(&mysql,"dblab")) //Название БД
+       die();
+    select();
+
+    mysql_close(&mysql);
+    return 0;
+}
